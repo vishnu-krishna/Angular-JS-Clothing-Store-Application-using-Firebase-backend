@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="classfiedApplication">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Angular JS Classified Application</title>
+    <link rel="stylesheet" href="node_modules/angular-material/angular-material.css">
+    <link href="node_modules/mdi/css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body ng-controller="classfiedController">
+    <md-toolbar md-scroll-shrink>
+        <div class="md-toolbar-tools">
+            <h3>{{ message }}</h3>
+
+            <p><strong>Clothing Store</strong></p>
+
+            <md-button ng-click="openSidebar()">
+                <md-icon class="mdi mdi-plus-circle"></md-icon>
+                New Clothing
+            </md-button>
+
+            <md-button ng-click="showFilters = !showFilters">
+                <md-icon class="mdi mdi-magnify"></md-icon>
+                Filters
+            </md-button>
+
+        </div>
+
+
+    </md-toolbar>
+
+    <div class="filters" layout="row" layout-align="center center" ng-show="showFilters">
+        <div>
+            <label class="Colors">Enter a Search Term</label>
+            <input ng-model="classifiedsFilter" type="text">
+        </div>
+        <div layout="row">
+            <md-button ng-click="classifiedsFilter = '';category=''" class="md-warn">
+                Clear
+            </md-button>
+        </div>
+        <!--
+        <div>
+            <label>Category</label>
+            <md-select ng-model="category">
+                <md-option ng-repeat="category in categories" value="{{ category }}">
+                    {{ category }}
+                </md-option>
+            </md-select>
+        </div>
+
+        <div layout="row">
+            <md-button ng-click="classifiedsFilter = '';category=''" class="md-warn">
+                Clear
+            </md-button>
+        </div> -->
+
+    </div>
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+        <md-toolbar>
+            <h1 class="md-toolbar-tools">Add Clothing</h1>
+        </md-toolbar>
+        <md-content layout-padding>
+            <form>
+                <md-input-container>
+                    <label for="title">Title</label>
+                    <input type="text" id="title" ng-model="classified.title" md-autofocus>
+                </md-input-container>
+                <md-input-container>
+                    <label for="price">Price</label>
+                    <input type="text" id="price" ng-model="classified.price">
+                </md-input-container>
+                <md-input-container>
+                    <label for="description">Description</label>
+                    <textarea type="text" id="description" ng-model="classified.description">
+                    </textarea>
+                </md-input-container>
+                <md-input-container>
+                    <label for="image">Image Link</label>
+                    <input type="text" id="image" ng-model="classified.image">
+                </md-input-container>
+                <md-button ng-if="!editing" ng-click="saveClassified(classified)" class="md-primary">
+                    Save
+                </md-button>
+                <md-button ng-if="editing" ng-click="saveEdit()" class="md-primary">
+                    Save Edit
+                </md-button>
+                <md-button ng-click="closeSidebar()" class="md-warn">
+                    Cancel
+                </md-button>
+
+            </form>
+        </md-content>
+    </md-sidenav>
+
+    <md-content class=md-padding layout=row layout-wrap>
+        <md-card flex="30" ng-repeat="classified in classifieds | filter:classifiedsFilter | filter:category" class="classified">
+            <image ng-src="{{classified.image}}"></image>
+            <md-card-content>
+                <div class="classfied-info" ng-show="!showContact">
+                    <h2 class="md-title">{{classified.title}}</h2>
+                    <h2>{{classified.posted | date:'longDate'}}</h2>
+                    <h3>{{classified.price | currency:"&#8377;"}}</h3>
+                    <p>{{classified.description}}</p>
+
+                </div>
+                <div class="classified-contact" ng-show="showContact">
+                    <p>
+                        <md-icon class="mdi mdi-account">
+
+                        </md-icon>
+                        {{classified.contact.name}}
+                    </p>
+                    <p>
+                        <md-icon class="mdi mdi-phone">
+
+                        </md-icon>
+                        {{classified.contact.phone}}
+                    </p>
+                    <p>
+                        <md-icon class="mdi mdi-email">
+
+                        </md-icon>
+                        {{classified.contact.email}}
+                    </p>
+                </div>
+                <div layout="row">
+                    <md-button ng-click="showContact=true" ng-show="!showContact">Contact
+
+                    </md-button>
+                    <md-button ng-click="showContact=false" ng-show="showContact">Details
+
+                    </md-button>
+                    <md-button ng-click="showAdmin=true" ng-show="!showAdmin">Admin
+
+                    </md-button>
+                    <md-button ng-click="showAdmin=false" ng-show="showAdmin">Close
+
+                    </md-button>
+                </div>
+                <div class="classifed-admin" ng-if="showAdmin">
+                    <h3>Admin</h3>
+                    <div layout="row">
+                        <md-button class="md-primary" ng-click="editClassfied(classified,$index)">Edit</md-button>
+                        <md-button class="md-warn" ng-click="deleteClassified($index,$event,classified)">Delete</md-button>
+                    </div>
+                </div>
+            </md-card-content>
+        </md-card>
+
+    </md-content>
+
+
+
+
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="Scripts/app.js"></script>
+    <script src="node_modules/angular-material/angular-material.js"></script>
+    <script src="node_modules/angular-animate/angular-animate.js"></script>
+    <script src="node_modules/angular-aria/angular-aria.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.5.1/lodash.min.js"></script>
+    <!-- Firebase -->
+    <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/1.2.0/angularfire.min.js"></script>
+</body>
+
+</html>
