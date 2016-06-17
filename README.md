@@ -1,4 +1,4 @@
-# This is an Angular JS Clothing Store kind of application which picks and persists the item from Firebase.
+# This is an Angular JS Clothing Store kind of application which picks and persists the item in Firebase.
 You can ADD, EDIT and DELETE the Item.
 Please Do Not Delete the Item. only try to add and Edit. but please dont delete.
 
